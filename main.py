@@ -3,6 +3,7 @@ import os
 import time
 import tictactoe as ttt
 import keep_alive
+import random
 
 from discord.ext import commands
 
@@ -98,8 +99,20 @@ def fresh_board():
 # Helper function to play AI's move
 def ai_turn():
     global board
-    move = ttt.minimax(board)
-    board = ttt.result(board, move)
+
+    # Corner moves as for a first move, this is usually the best move
+    corner_moves = [[0, 0], [0, 2], [2, 0], [2, 2]]
+    # Check if board is currently empty or not
+    all_moves = [val is None for sublist in board for val in sublist]
+
+    # If board empty, select from corner_moves
+    if sum(all_moves) == len(all_moves):
+        move = corner_moves[random.randint(0, 3)]
+        board = ttt.result(board, (move[0], move[1]))
+    # Select from minimax algorithm
+    else:
+        move = ttt.minimax(board)
+        board = ttt.result(board, move)
 
 
 # Helper function to check if game is finished or not and send appropiate message
