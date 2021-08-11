@@ -156,20 +156,25 @@ async def rules(ctx):
 # Select X/O to play
 @bot.command(name="play", help="Select which character to play with")
 async def play(ctx, character=None):
+    # Get game status
     game_over, _ = game_status()
+    # If game currently over, ask user to start again
     if game_over:
         return await ctx.send(
             "Current game is over! Type `!ttt start` and get ready for the next round!"
         )
+    # If input not provided, send error message
     if character == None:
         return await ctx.send("You must select either `'X'` or `'O'`!")
     global user
+    # Check if user has provided X, x, O, o
     if user is None:
         if character in ["X", "x"]:
             user = ttt.X
             await ctx.send("You've selected `X` and will go `first!`")
             await rules(ctx)
         elif character in ["O", "o"]:
+            # If user has selected O, then AI will go first
             user = ttt.O
             await ctx.send("You've selected `O` and will go `second!`")
             await ctx.send("`Ai is thinking...`")
@@ -179,6 +184,7 @@ async def play(ctx, character=None):
             await ctx.send("Your turn `now!`")
         else:
             await ctx.send("You must select either `'X'` or `'O'!`")
+    # If user is already selected and still this command was provided, send error
     else:
         await ctx.send(f"You are already playing as `{user}`")
 
@@ -187,41 +193,51 @@ async def play(ctx, character=None):
 @bot.command(name="select", help="Select cell to play")
 async def select(ctx, cell_number=None):
     global board
+    # If cell number not provided, send error
     if cell_number == None:
         return await ctx.send(f"You must select a place between `(1 - 9)!`")
     game_over, player = game_status()
+    # If game over, ask user to start again as no point in allowing board selection
     if game_over:
         return await ctx.send(
             "Current game is over! Type `!ttt start` and get ready for the next round!"
         )
     if user == player and not game_over:
+        # Check for correct cell number
         if cell_number not in [str(i) for i in range(1, 10)]:
             await ctx.send(f"You must select a place between `(1 - 9)!`")
         else:
             await ctx.send(f"You've selected: `{cell_number}`")
+            # Check if current cell number is empty
             try:
                 result = INPUT_TO_RESULT[cell_number]
                 board = ttt.result(board, (result[0], result[1]))
                 await ctx.send(print_board())
+                # Check if game is finished with this move
                 response = finished()
                 if response:
                     return await ctx.send(response)
+                # Make AI play
                 await ctx.send("`Ai is thinking...`")
                 time.sleep(0.5)
                 ai_turn()
                 await ctx.send(print_board())
+                # Check if game is finished with this move
                 response = finished()
                 if response:
                     return await ctx.send(response)
                 await ctx.send("Your turn `again!`")
             except ValueError:
+                # If not able to place the piece, send error
                 await ctx.send("There is `already` a piece there!")
     else:
+        # If game has not started, user variable will be None
         if user is None:
             await ctx.send(f"Game has not started yet!")
             await ctx.send(
                 f"Use the `!ttt play` command followed by either `X` or `O` to get started!"
             )
+        # Game has started but it's currently AI's turn
         else:
             await ctx.send(f"It's `not` your turn!")
 
