@@ -108,7 +108,7 @@ def ai_turn():
     # If board empty, select from corner_moves
     if sum(all_moves) == len(all_moves):
         move = corner_moves[random.randint(0, 3)]
-        board = ttt.result(board, (move[0], move[1]))
+        board = ttt.result(board, move)
     # Select from minimax algorithm
     else:
         move = ttt.minimax(board)
