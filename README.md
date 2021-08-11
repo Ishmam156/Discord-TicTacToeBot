@@ -1,7 +1,7 @@
 
 # TicTacToe Discord Bot
 
-A simple text based BOT that allows users to play a tic tac toe game against an AI. The AI is built to solve the board using the minimax algorithm and should make it impossible to win against the AI
+A simple text based BOT that allows users to play a tic tac toe game against an AI. The AI is built to solve the board using the minimax algorithm and should make it impossible to win against the AI.
 
 
 ## Add to your server
@@ -30,7 +30,7 @@ Link to add to server is [here](https://discord.com/api/oauth2/authorize?client_
 
 - Install requirements from `requirements.txt`
 - Create a Discord BOT and get its `TOKEN` and set it as an enivornment variable
-- Files are setup to run easily in `repl.it
+- Files are setup to run easily in `repl.it`
 - With slight modification can run in service like `Heroku`
 
 ## Environment Variables
